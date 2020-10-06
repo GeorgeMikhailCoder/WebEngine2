@@ -43,3 +43,4 @@ else()
 endif()
 
 target_link_libraries(WebEngine2 PRIVATE Qt5::Widgets)
+target_link_libraries(WebEngine2 PRIVATE Qt5::WebEngineWidgets)

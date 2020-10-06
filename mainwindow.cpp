@@ -16,5 +16,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_ButLoad_clicked()
 {
-
+      ui->preview->page()->load(ui->lineAdress->text());
 }
