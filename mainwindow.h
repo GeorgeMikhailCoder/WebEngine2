@@ -14,18 +14,15 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-signals:
-    void convertFinished(QString);
-
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void on_ButLoad_clicked();
-    void when_convertFinished(QString str);
-    void when_loadFinished(bool ok);
+    void ConvertHtml(bool ok);
 private:
     Ui::MainWindow *ui;
+
 };
 #endif // MAINWINDOW_H

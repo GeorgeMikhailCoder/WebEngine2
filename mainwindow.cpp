@@ -6,9 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    connect(this,SIGNAL(convertFinished(QString)),this,SLOT(when_convertFinished(QString)));
-
 }
 
 MainWindow::~MainWindow()
@@ -16,24 +13,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
 void MainWindow::on_ButLoad_clicked()
 {
-      connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(when_loadFinished(bool)));
-      ui->preview->page()->load(ui->lineAdress->text());
+    if(QUrl(ui->lineAdress->text()).isValid())
+    {
+        connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(ConvertHtml(bool)));
+        ui->preview->page()->load(ui->lineAdress->text());
+    }
+
+    // else ... обработка ошибки
+
 }
-void MainWindow::when_convertFinished(QString str)
-{
-    ui->coodePreview->setText(str);
-}
-void MainWindow::when_loadFinished(bool ok)
+void MainWindow::ConvertHtml(bool ok)
 {
     if(ok)
-    ui->preview->page()->toHtml([this](const QString& data)
+    ui->preview->page()->toHtml([this](const QString& strHtml)
     {
-          emit this->when_convertFinished(data);
+        ui->coodePreview->setText(strHtml);
     });
     else
         ui->coodePreview->setText("load failed!");
 }
+
