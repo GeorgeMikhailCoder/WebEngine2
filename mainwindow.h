@@ -21,10 +21,14 @@ public:
 private slots:
     void on_ButLoad_clicked();
     void ConvertHtml(bool ok);
-
+    void SaveHtml(bool);
     void on_ButSetPath_clicked();
+
 
 private:
     Ui::MainWindow *ui;
+    QStringList findLinks(QString strHtml);
+
+    QWebEnginePage *Pages;
 };
 #endif // MAINWINDOW_H

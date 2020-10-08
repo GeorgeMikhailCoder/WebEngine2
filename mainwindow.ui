@@ -86,7 +86,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>C:\Users\60\Desktop\Загрузка из моего приложения</string>
+     <string>C:\Users\60\Desktop\Загрузка из моего приложения\111.html</string>
     </property>
    </widget>
    <widget class="QToolButton" name="ButSetPath">

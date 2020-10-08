@@ -27,20 +27,54 @@ void MainWindow::on_ButLoad_clicked()
 void MainWindow::ConvertHtml(bool ok)
 {
     if(ok)
-    ui->preview->page()->toHtml([this](const QString& strHtml)
     {
-        ui->coodePreview->setText(strHtml);
 
+        ui->preview->page()->toHtml([this](const QString& strHtml)
+        {
+            ui->coodePreview->setText(strHtml);
+            QStringList strUrls = findLinks(strHtml);
+            Pages=new QWebEnginePage[strUrls.length()];
+            for(int  i=0;i<strUrls.length();i++)
+            {
+                connect(&Pages[i],SIGNAL(loadFinished(bool)),
+                        this,SLOT(SaveHtml(bool)));
+                Pages[i].load(strUrls[i]);
+            }
 
-    });
+        });
+    }
     else
         ui->coodePreview->setText("load failed!");
 }
 
-
+void MainWindow::SaveHtml(bool ok)
+{
+    if(ok)
+    {
+        ui->MsgOut->setText("!!!");
+    }
+    else
+        ui->MsgOut->setText("Failed saving html by link");
+}
 
 void MainWindow::on_ButSetPath_clicked()
 {
-    QString path = QFileDialog::getSaveFileName(0,QObject::tr("Укажите папку для сохранения файла"),QDir::homePath(), QObject::tr("Web-страница (*.html);;Все файлы (*.*)"));
-    ui->linePath->setText(path);
+    QString pathSave = QFileDialog::getSaveFileName(0,QObject::tr("Укажите папку для сохранения файла"),QDir::homePath(), QObject::tr("Web-страница (*.html);;Все файлы (*.*)"));
+    ui->linePath->setText(pathSave);
+}
+
+QStringList MainWindow::findLinks(QString strHtml)
+{
+    QStringList strlist(strHtml.split("\n"));
+    QRegExp linkMark;
+    linkMark.setPatternSyntax(QRegExp::Wildcard);
+    linkMark.setPattern("<a href=\"*\"");
+    QStringList res = strlist.filter(linkMark);
+    res.replaceInStrings(QRegExp("*<a href=\"",Qt::CaseSensitive,QRegExp::Wildcard),"");
+    res.replaceInStrings(QRegExp("\"*",Qt::CaseSensitive,QRegExp::Wildcard),"");
+
+    for(int i=0;i<res.length();i++)
+        if(!QUrl(res[i]).isValid())
+            res.removeAt(i);
+    return res;
 }
