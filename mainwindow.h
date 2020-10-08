@@ -21,8 +21,10 @@ public:
 private slots:
     void on_ButLoad_clicked();
     void ConvertHtml(bool ok);
+
+    void on_ButSetPath_clicked();
+
 private:
     Ui::MainWindow *ui;
-
 };
 #endif // MAINWINDOW_H

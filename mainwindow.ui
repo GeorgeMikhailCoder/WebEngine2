@@ -17,9 +17,9 @@
    <widget class="QLineEdit" name="lineAdress">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>301</width>
+      <x>10</x>
+      <y>20</y>
+      <width>331</width>
       <height>22</height>
      </rect>
     </property>
@@ -30,9 +30,9 @@
    <widget class="QPushButton" name="ButLoad">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>60</y>
-      <width>93</width>
+      <x>260</x>
+      <y>50</y>
+      <width>81</width>
       <height>28</height>
      </rect>
     </property>
@@ -46,21 +46,60 @@
       <x>390</x>
       <y>10</y>
       <width>361</width>
-      <height>521</height>
+      <height>241</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="coodePreview">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>110</y>
-      <width>301</width>
-      <height>421</height>
+      <x>390</x>
+      <y>270</y>
+      <width>361</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>There will be source code of html</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="MsgOut">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>301</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>The messages output</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="linePath">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>211</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>C:\Users\60\Desktop\Загрузка из моего приложения</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="ButSetPath">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>50</y>
+      <width>27</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
     </property>
    </widget>
   </widget>

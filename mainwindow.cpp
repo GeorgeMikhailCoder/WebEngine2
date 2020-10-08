@@ -30,8 +30,17 @@ void MainWindow::ConvertHtml(bool ok)
     ui->preview->page()->toHtml([this](const QString& strHtml)
     {
         ui->coodePreview->setText(strHtml);
+
+
     });
     else
         ui->coodePreview->setText("load failed!");
 }
 
+
+
+void MainWindow::on_ButSetPath_clicked()
+{
+    QString path = QFileDialog::getSaveFileName(0,QObject::tr("Укажите папку для сохранения файла"),QDir::homePath(), QObject::tr("Web-страница (*.html);;Все файлы (*.*)"));
+    ui->linePath->setText(path);
+}
