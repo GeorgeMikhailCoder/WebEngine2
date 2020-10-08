@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(this,SIGNAL(convertFinished),this,SLOT(when_convertFinished));
+    connect(this,SIGNAL(convertFinished(QString)),this,SLOT(when_convertFinished(QString)));
+
 }
 
 MainWindow::~MainWindow()
@@ -19,12 +20,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_ButLoad_clicked()
 {
+      connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(when_loadFinished(bool)));
       ui->preview->page()->load(ui->lineAdress->text());
-      ui->preview->page()->toHtml([this](const QString& data){
-          emit this->when_convertFinished(data);
-      });
 }
 void MainWindow::when_convertFinished(QString str)
 {
     ui->coodePreview->setText(str);
+}
+void MainWindow::when_loadFinished(bool ok)
+{
+    if(ok)
+    ui->preview->page()->toHtml([this](const QString& data)
+    {
+          emit this->when_convertFinished(data);
+    });
+    else
+        ui->coodePreview->setText("load failed!");
 }

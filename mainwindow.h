@@ -24,6 +24,7 @@ public:
 private slots:
     void on_ButLoad_clicked();
     void when_convertFinished(QString str);
+    void when_loadFinished(bool ok);
 private:
     Ui::MainWindow *ui;
 };
