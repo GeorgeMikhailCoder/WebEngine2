@@ -6,6 +6,8 @@
 #include<QtWebEngineWidgets/QtWebEngineWidgets>
 #include<QtWebEngineWidgets/qwebengineview.h>
 
+#include"mypage.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -28,7 +30,5 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QStringList findLinks(QString strHtml);
-
-    QWebEnginePage *Pages;
 };
 #endif // MAINWINDOW_H

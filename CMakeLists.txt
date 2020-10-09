@@ -32,6 +32,8 @@ if(ANDROID)
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    mypage.h
+    mypage.cpp
   )
 else()
   add_executable(WebEngine2
@@ -39,6 +41,8 @@ else()
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    mypage.h
+    mypage.cpp
   )
 endif()
 

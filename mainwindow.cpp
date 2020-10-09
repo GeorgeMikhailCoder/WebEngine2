@@ -28,17 +28,14 @@ void MainWindow::ConvertHtml(bool ok)
 {
     if(ok)
     {
-
         ui->preview->page()->toHtml([this](const QString& strHtml)
         {
             ui->coodePreview->setText(strHtml);
-            QStringList strUrls = findLinks(strHtml);
-            Pages=new QWebEnginePage[strUrls.length()];
-            for(int  i=0;i<strUrls.length();i++)
+            QStringList strUrl = findLinks(strHtml);
+            new MyPage(ui->lineAdress->text(), ui->linePath->text()); //утечка памяти!
+            for(int  i=0;i<strUrl.length();i++)
             {
-                connect(&Pages[i],SIGNAL(loadFinished(bool)),
-                        this,SLOT(SaveHtml(bool)));
-                Pages[i].load(strUrls[i]);
+                //MyPage(strUrl[i],)
             }
 
         });
@@ -51,6 +48,7 @@ void MainWindow::SaveHtml(bool ok)
 {
     if(ok)
     {
+
         ui->MsgOut->setText("!!!");
     }
     else
