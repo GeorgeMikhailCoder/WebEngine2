@@ -64,6 +64,9 @@ QStringList MainWindow::findLinks(QString strHtml)
     for(int i=0;i<res.length();i++)
         if(!QUrl(res[i]).isValid())
             res.removeAt(i);
+    else if(QUrl(res[i]).scheme()=="")
+            res[i]=ui->lineAdress->text()+"/"+res[i];
+
     return res;
 }
 
