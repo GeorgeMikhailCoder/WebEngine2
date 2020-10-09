@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>http://miet.aha.ru/</string>
+     <string>http://orioks.miet.ru/</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ButLoad">

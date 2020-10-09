@@ -32,27 +32,17 @@ void MainWindow::ConvertHtml(bool ok)
         {
             ui->coodePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            new MyPage(ui->lineAdress->text(), ui->linePath->text()); //утечка памяти!
+            new MyPage(ui->lineAdress->text(), ui->linePath->text());
+            QString path = defPath()+"/";
             for(int  i=0;i<strUrl.length();i++)
             {
-                //MyPage(strUrl[i],)
+                new MyPage(strUrl[i],path+"linked_"+QString::number(i)+".html"); //утечка памяти!
             }
 
         });
     }
     else
         ui->coodePreview->setText("load failed!");
-}
-
-void MainWindow::SaveHtml(bool ok)
-{
-    if(ok)
-    {
-
-        ui->MsgOut->setText("!!!");
-    }
-    else
-        ui->MsgOut->setText("Failed saving html by link");
 }
 
 void MainWindow::on_ButSetPath_clicked()
@@ -75,4 +65,19 @@ QStringList MainWindow::findLinks(QString strHtml)
         if(!QUrl(res[i]).isValid())
             res.removeAt(i);
     return res;
+}
+
+QString MainWindow::defPath()
+{
+    QString pathSave = ui->linePath->text();
+    QDir path = pathSave;
+    QString nameHtml = path.dirName();
+    nameHtml.remove(nameHtml.indexOf("."),nameHtml.length()-nameHtml.indexOf("."));
+    path.cdUp();
+    if(path.exists(nameHtml+"_linked"))path.rmdir(nameHtml+"_linked");
+    path.mkdir(nameHtml+"_linked");
+    path.cd(nameHtml+"_linked");
+
+    return path.path();
+
 }
