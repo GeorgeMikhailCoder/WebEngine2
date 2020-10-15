@@ -32,11 +32,15 @@ void MainWindow::ConvertHtml(bool ok)
         {
             ui->coodePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            new MyPage(ui->lineAdress->text(), ui->linePath->text());
+            MyPage* basePage = new MyPage();
+            massHtml.append(*basePage);
+
             QString path = defPath()+"/";
+
             for(int  i=0;i<strUrl.length();i++)
             {
-                new MyPage(strUrl[i],path+"linked_"+QString::number(i)+".html"); //утечка памяти!
+                MyPage* curPage = new MyPage(strUrl[i],path+"linked_"+QString::number(i)+".html");
+                massHtml.append(*curPage);
             }
 
         });

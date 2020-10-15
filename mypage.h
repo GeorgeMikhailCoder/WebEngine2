@@ -12,10 +12,15 @@ private slots:
     void Save(bool);
 
 public:
+    MyPage(){};
+    MyPage(const MyPage& );
     MyPage(QString Url, QString fPathName);
     ~MyPage();
-private:
+    MyPage& operator=(const MyPage& Right);
+
     void LoadAndSave(QString Url, QString fPathName);
+private:
+
 
 QString filePathName;
 QWebEnginePage page;

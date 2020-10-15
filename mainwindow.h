@@ -5,7 +5,6 @@
 #include<QtWebEngine/QtWebEngine>
 #include<QtWebEngineWidgets/QtWebEngineWidgets>
 #include<QtWebEngineWidgets/qwebengineview.h>
-
 #include"mypage.h"
 
 QT_BEGIN_NAMESPACE
@@ -28,6 +27,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QList<MyPage> massHtml;
     QStringList findLinks(QString strHtml);
     QString defPath();
 };
