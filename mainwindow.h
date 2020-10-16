@@ -5,7 +5,7 @@
 #include<QtWebEngine/QtWebEngine>
 #include<QtWebEngineWidgets/QtWebEngineWidgets>
 #include<QtWebEngineWidgets/qwebengineview.h>
-#include"mypage.h"
+#include"Downloader.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,13 +21,13 @@ public:
 
 private slots:
     void on_ButLoad_clicked();
-    void ConvertHtml(bool ok);
+    void convertHtml(bool ok);
     void on_ButSetPath_clicked();
-
+    void showMessage(QString msg);
 
 private:
     Ui::MainWindow *ui;
-    QList<MyPage> massHtml;
+    QList<Downloader> MassHtml;
     QStringList findLinks(QString strHtml);
     QString defPath();
 };

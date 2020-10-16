@@ -13,18 +13,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::showMessage(QString msg)
+{
+    QMessageBox::information(this,"Message",msg);
+}
+
 void MainWindow::on_ButLoad_clicked()
 {
     if(QUrl(ui->lineAdress->text()).isValid())
     {
-        connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(ConvertHtml(bool)));
+        connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
         ui->preview->page()->load(ui->lineAdress->text());
     }
 
     // else ... обработка ошибки
 
 }
-void MainWindow::ConvertHtml(bool ok)
+void MainWindow::convertHtml(bool ok)
 {
     if(ok)
     {
@@ -32,15 +37,15 @@ void MainWindow::ConvertHtml(bool ok)
         {
             ui->coodePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            MyPage* basePage = new MyPage();
-            massHtml.append(*basePage);
+            Downloader* basePage = new Downloader(ui->lineAdress->text(),ui->linePath->text(),this);
+            MassHtml.append(*basePage);
 
             QString path = defPath()+"/";
 
             for(int  i=0;i<strUrl.length();i++)
             {
-                MyPage* curPage = new MyPage(strUrl[i],path+"linked_"+QString::number(i)+".html");
-                massHtml.append(*curPage);
+                Downloader* curPage = new Downloader(strUrl[i],path+"linked_"+QString::number(i)+".html",this);
+                MassHtml.append(*curPage);
             }
 
         });
