@@ -30,7 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QList<Downloader> MassHtml;
+    QList<Downloader*> MassHtml;
     QStringList findLinks(QString strHtml);
     QString defPath();
 

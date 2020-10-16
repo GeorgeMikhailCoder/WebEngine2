@@ -50,7 +50,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="coodePreview">
+   <widget class="QLabel" name="codePreview">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -69,11 +69,14 @@
       <x>10</x>
       <y>130</y>
       <width>301</width>
-      <height>51</height>
+      <height>191</height>
      </rect>
     </property>
     <property name="text">
      <string>The messages output</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="linePath">

@@ -55,6 +55,7 @@ void MainWindow::convertHtml(bool ok)
             ui->codePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
             QString path = defPath()+"/";
+            ui->MsgOut->setText("\n Find links:\n"+strUrl.join("\n"));
 
             CountHtml = strUrl.length()+1;
             CountDownloaded=0;
@@ -62,13 +63,9 @@ void MainWindow::convertHtml(bool ok)
             ui->progressBar->setMaximum(100*(CountHtml));
             ui->progressBar->show();
 
-            Downloader* basePage = new Downloader(ui->lineAdress->text(),ui->linePath->text(),this);
-            MassHtml.append(*basePage);
+            MassHtml.append(new Downloader(ui->lineAdress->text(),ui->linePath->text(),this));
             for(int  i=0;i<strUrl.length();i++)
-            {
-                Downloader* curPage = new Downloader(strUrl[i],path+"linked_"+QString::number(i)+".html",this);
-                MassHtml.append(*curPage);
-            }
+                MassHtml.append(new Downloader(strUrl[i],path+"linked_"+QString::number(i)+".html",this));
 
         });
     }
