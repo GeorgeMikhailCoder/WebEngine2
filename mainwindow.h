@@ -18,17 +18,23 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+signals:
+    void createMessage(QString);
 private slots:
     void on_ButLoad_clicked();
     void convertHtml(bool ok);
     void on_ButSetPath_clicked();
     void showMessage(QString msg);
+    void on_loadProgress(int progress);
+    void countLoadFinished(bool);
 
 private:
     Ui::MainWindow *ui;
     QList<Downloader> MassHtml;
     QStringList findLinks(QString strHtml);
     QString defPath();
+
+    int CountDownloaded;
+    int CountHtml;
 };
 #endif // MAINWINDOW_H

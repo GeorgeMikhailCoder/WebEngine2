@@ -10,10 +10,10 @@ class Downloader:QObject
     Q_OBJECT
 signals:
     void createMessage(QString);
-
+    void loadDifferenceCounted(int);
 private slots:
     void save(bool);
-
+    void loadDifference(int);
 
 public:
     Downloader(QObject* parent = nullptr);
@@ -28,7 +28,7 @@ private:
 
 QString FilePathName;
 QWebEnginePage Page;
-
+int LoadProgress;
 };
 
 #endif // MYPAGE_H

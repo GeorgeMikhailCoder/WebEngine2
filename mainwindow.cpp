@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->progressBar->hide();
+
+    connect(this,SIGNAL(createMessage(QString)), this, SLOT(showMessage(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -18,6 +21,21 @@ void MainWindow::showMessage(QString msg)
     QMessageBox::information(this,"Message",msg);
 }
 
+void MainWindow::on_loadProgress(int progress)
+{
+    ui->progressBar->setValue(ui->progressBar->value()+progress);
+}
+
+void MainWindow::countLoadFinished(bool ok)
+{
+if(ok)CountDownloaded++;
+if(CountDownloaded==CountHtml)
+{
+    ui->progressBar->setValue(ui->progressBar->maximum());
+    createMessage("Load finished");
+}
+}
+
 void MainWindow::on_ButLoad_clicked()
 {
     if(QUrl(ui->lineAdress->text()).isValid())
@@ -25,7 +43,6 @@ void MainWindow::on_ButLoad_clicked()
         connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
         ui->preview->page()->load(ui->lineAdress->text());
     }
-
     // else ... обработка ошибки
 
 }
@@ -35,13 +52,18 @@ void MainWindow::convertHtml(bool ok)
     {
         ui->preview->page()->toHtml([this](const QString& strHtml)
         {
-            ui->coodePreview->setText(strHtml);
+            ui->codePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            Downloader* basePage = new Downloader(ui->lineAdress->text(),ui->linePath->text(),this);
-            MassHtml.append(*basePage);
-
             QString path = defPath()+"/";
 
+            CountHtml = strUrl.length()+1;
+            CountDownloaded=0;
+            ui->progressBar->reset();
+            ui->progressBar->setMaximum(100*(CountHtml));
+            ui->progressBar->show();
+
+            Downloader* basePage = new Downloader(ui->lineAdress->text(),ui->linePath->text(),this);
+            MassHtml.append(*basePage);
             for(int  i=0;i<strUrl.length();i++)
             {
                 Downloader* curPage = new Downloader(strUrl[i],path+"linked_"+QString::number(i)+".html",this);
@@ -51,7 +73,7 @@ void MainWindow::convertHtml(bool ok)
         });
     }
     else
-        ui->coodePreview->setText("load failed!");
+        ui->codePreview->setText("load failed!");
 }
 
 void MainWindow::on_ButSetPath_clicked()
