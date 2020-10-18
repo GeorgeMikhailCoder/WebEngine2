@@ -24,7 +24,7 @@ public:
 
     void loadAndSave(QString Url, QString fPathName);
 private:
-
+bool CheckAvialSize();
 
 QString FilePathName;
 QWebEnginePage Page;

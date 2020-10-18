@@ -53,11 +53,34 @@ void Downloader::loadAndSave(QString Url, QString fPathName)
 
 void Downloader::save(bool ok)
 {
-//emit createMessage("Signal accepted\n"+Page.url().toString());
-if(ok)
+if(!ok){emit createMessage("Error loading file\n"+Page.url().toString());return;}
+if(CheckAvialSize())
 {
     Page.save(FilePathName,QWebEngineDownloadItem::SavePageFormat::CompleteHtmlSaveFormat);
 }
-else
-emit createMessage("Error loading file\n"+Page.url().toString());
+}
+
+bool Downloader::CheckAvialSize()
+{
+    bool b=true;
+    QDir SavePath(FilePathName);
+    SavePath.cdUp();
+
+    QStorageInfo Disk(SavePath);
+    QString str = Disk.rootPath();
+    qint64 SizeAvial = Disk.bytesAvailable();
+    qint64 SizePage = sizeof(Page);
+
+    qDebug()<<"Последний сайт:";
+    qDebug()<<FilePathName;
+    qDebug()<<Disk;
+    qDebug()<<SizeAvial;
+    qDebug()<<SizePage;
+
+
+
+    if(!Disk.isReady()){emit createMessage("Fail to acsess file system\n"+FilePathName);b=false;}
+    else if(!Disk.isValid()){emit createMessage("Current root disk isn't valid\n"+FilePathName);b=false;}
+    else if(SizePage > SizeAvial) {emit createMessage("Not enough aviable size on hard drive\nMaybe you should try it as an admin\n"+FilePathName);b=false;}
+return b;
 }
