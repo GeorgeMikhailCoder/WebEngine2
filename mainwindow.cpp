@@ -43,7 +43,8 @@ void MainWindow::on_ButLoad_clicked()
         connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
         ui->preview->page()->load(ui->lineAdress->text());
     }
-    // else ... обработка ошибки
+    else createMessage("Url isn't valid");
+
 
 }
 void MainWindow::convertHtml(bool ok)
@@ -69,9 +70,25 @@ void MainWindow::convertHtml(bool ok)
             QDir MainPath = SavePath;
             MainPath.cdUp();
             qDebug()<<MainPath;
-            MassHtml.append(new Downloader(ui->lineAdress->text(),MainPath.path()+"/"+SaveFileName+".html",this));
+
+            //  int Length = strUrl.length();
+            //  MassHtml.resize(Length);
+            //  int i=0;
+            //  for(Downloader& curHtml: MassHtml)
+            //  {
+            //      curHtml.setDownloaderParent(this);
+            //      curHtml.loadAndSave(strUrl[i],SavePath.path()+"/linked_"+QString::number(i)+".html");
+            //      i++;
+            //  }
+
+            MassHtml.append(new Downloader(this));
+            MassHtml.last()->loadAndSave(ui->lineAdress->text(),MainPath.path()+"/"+SaveFileName+".html");
             for(int  i=0;i<strUrl.length();i++)
-                MassHtml.append(new Downloader(strUrl[i],SavePath.path()+"/linked_"+QString::number(i)+".html",this));
+            {
+                MassHtml.append(new Downloader(this));
+                MassHtml.last()->loadAndSave(strUrl[i],SavePath.path()+"/linked_"+QString::number(i)+".html");
+            }
+
 
         });
     }

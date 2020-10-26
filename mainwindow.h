@@ -36,6 +36,7 @@ private:
     QString addLinkedPath();
 
     QList<Downloader*> MassHtml;
+//    QVector<Downloader> MassHtml;
     QDir SavePath;
     QString SaveFileName;
     int CountDownloaded;

@@ -1,6 +1,7 @@
 #include "Downloader.h"
 
-Downloader::Downloader(QObject* parent):QObject(parent)
+Downloader::Downloader(QObject* parent)
+    :QObject(parent),Profile(this), Page(&Profile,this)
 {
     LoadProgress=0;
 connect(this,SIGNAL(createMessage(QString)),
@@ -29,6 +30,11 @@ Downloader::~Downloader()
 
 }
 
+void Downloader::setDownloaderParent(QObject * parent)
+{
+    this->setParent(parent);
+}
+
 Downloader& Downloader::operator=(const Downloader& Right)
 {
     FilePathName=Right.FilePathName;
@@ -46,41 +52,34 @@ void Downloader::loadAndSave(QString Url, QString fPathName)
 {
     FilePathName=fPathName;
     Page.setUrl(Url);
-    connect(&Page,SIGNAL(loadFinished(bool)),this,SLOT(save(bool)));
-    Page.load(Url);
     //emit createMessage("Signal sended");
+
+    connect(&Profile,
+            SIGNAL(downloadRequested(QWebEngineDownloadItem*)),
+            this,
+            SLOT(BeforeDownload(QWebEngineDownloadItem*))
+            );
+
+
+    //connect(&Page,SIGNAL(loadFinished(bool)),this,SLOT(save(bool)));
+    Page.download(Url,fPathName);
+
 }
 
-void Downloader::save(bool ok)
+void Downloader::BeforeDownload(QWebEngineDownloadItem* DownloadItem)
 {
-if(!ok){emit createMessage("Error loading file\n"+Page.url().toString());return;}
-if(CheckAvialSize())
-{
-    Page.save(FilePathName,QWebEngineDownloadItem::SavePageFormat::CompleteHtmlSaveFormat);
+qDebug()<<DownloadItem;
+Item = DownloadItem;
+connect(DownloadItem,
+        SIGNAL(stateChanged (QWebEngineDownloadItem :: DownloadState)),
+        this,
+        SLOT(ShowError(QWebEngineDownloadItem :: DownloadState))
+        );
+DownloadItem->accept();
 }
-}
 
-bool Downloader::CheckAvialSize()
+void Downloader::ShowError(QWebEngineDownloadItem::DownloadState State)
 {
-    bool b=true;
-    QDir SavePath(FilePathName);
-    SavePath.cdUp();
-
-    QStorageInfo Disk(SavePath);
-    QString str = Disk.rootPath();
-    qint64 SizeAvial = Disk.bytesAvailable();
-    qint64 SizePage = sizeof(Page);
-
-    qDebug()<<"Последний сайт:";
-    qDebug()<<FilePathName;
-    qDebug()<<Disk;
-    qDebug()<<SizeAvial;
-    qDebug()<<SizePage;
-
-
-
-    if(!Disk.isReady()){emit createMessage("Fail to acsess file system\n"+FilePathName);b=false;}
-    else if(!Disk.isValid()){emit createMessage("Current root disk isn't valid\n"+FilePathName);b=false;}
-    else if(SizePage > SizeAvial) {emit createMessage("Not enough aviable size on hard drive\nMaybe you should try it as an admin\n"+FilePathName);b=false;}
-return b;
+if(State==QWebEngineDownloadItem::DownloadState::DownloadInterrupted)
+    createMessage("Error while loading\n"+Page.url().toString()+"\n"+Item->interruptReasonString());
 }

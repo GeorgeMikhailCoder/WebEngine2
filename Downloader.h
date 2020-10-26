@@ -12,8 +12,9 @@ signals:
     void createMessage(QString);
     void loadDifferenceCounted(int);
 private slots:
-    void save(bool);
     void loadDifference(int);
+    void BeforeDownload(QWebEngineDownloadItem*);
+    void ShowError(QWebEngineDownloadItem::DownloadState);
 
 public:
     Downloader(QObject* parent = nullptr);
@@ -21,13 +22,16 @@ public:
     Downloader(QString Url, QString fPathName,QObject* parent=nullptr);
     ~Downloader();
     Downloader& operator=(const Downloader& Right);
+    void setDownloaderParent(QObject*);// можно удалить
 
     void loadAndSave(QString Url, QString fPathName);
+
 private:
-bool CheckAvialSize();
 
 QString FilePathName;
+QWebEngineProfile Profile;
 QWebEnginePage Page;
+QWebEngineDownloadItem* Item;
 int LoadProgress;
 };
 
