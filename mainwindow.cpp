@@ -40,8 +40,24 @@ void MainWindow::on_ButLoad_clicked()
 {
     if(QUrl(ui->lineAdress->text()).isValid())
     {
-        connect(ui->preview->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
-        ui->preview->page()->load(ui->lineAdress->text());
+        ui->MsgOut->setText("Loading main page...");
+
+
+
+        parsePath(ui->linePath->text());
+        if(!checkPath())return;
+        addLinkedPath();
+        qDebug()<<SavePath;
+        QDir MainPath = SavePath;
+        MainPath.cdUp();
+
+        ui->progressBar->reset();
+        ui->progressBar->show();
+
+        MassHtml.append(new Downloader(this));
+        connect(&MassHtml.last()->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
+        MassHtml.last()->loadAndSave(ui->lineAdress->text(),MainPath.path()+"/"+SaveFileName+".html");
+        ui->preview->setPage(&MassHtml.last()->page());
     }
     else createMessage("Url isn't valid");
 
@@ -49,40 +65,22 @@ void MainWindow::on_ButLoad_clicked()
 }
 void MainWindow::convertHtml(bool ok)
 {
+    ui->progressBar->setValue(100);
+    createMessage("Loading main page finished");
     if(ok)
     {
         ui->preview->page()->toHtml([this](const QString& strHtml)
         {
             ui->codePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            parsePath(ui->linePath->text());
-            if(!checkPath())return;
-            addLinkedPath();
-            qDebug()<<SavePath;
             ui->MsgOut->setText("\n Find links:\n"+strUrl.join("\n"));
 
-            CountHtml = strUrl.length()+1;
+            CountHtml = strUrl.length();
             CountDownloaded=0;
             ui->progressBar->reset();
             ui->progressBar->setMaximum(100*(CountHtml));
             ui->progressBar->show();
 
-            QDir MainPath = SavePath;
-            MainPath.cdUp();
-            qDebug()<<MainPath;
-
-            //  int Length = strUrl.length();
-            //  MassHtml.resize(Length);
-            //  int i=0;
-            //  for(Downloader& curHtml: MassHtml)
-            //  {
-            //      curHtml.setDownloaderParent(this);
-            //      curHtml.loadAndSave(strUrl[i],SavePath.path()+"/linked_"+QString::number(i)+".html");
-            //      i++;
-            //  }
-
-            MassHtml.append(new Downloader(this));
-            MassHtml.last()->loadAndSave(ui->lineAdress->text(),MainPath.path()+"/"+SaveFileName+".html");
             for(int  i=0;i<strUrl.length();i++)
             {
                 MassHtml.append(new Downloader(this));

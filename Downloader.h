@@ -5,7 +5,7 @@
 #include<QtWebEngineWidgets/QtWebEngineWidgets>
 
 
-class Downloader:QObject
+class Downloader:public QObject
 {
     Q_OBJECT
 signals:
@@ -22,7 +22,8 @@ public:
     Downloader(QString Url, QString fPathName,QObject* parent=nullptr);
     ~Downloader();
     Downloader& operator=(const Downloader& Right);
-    void setDownloaderParent(QObject*);// можно удалить
+
+    QWebEnginePage& page();
 
     void loadAndSave(QString Url, QString fPathName);
 

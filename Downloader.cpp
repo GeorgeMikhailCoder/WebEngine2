@@ -30,9 +30,9 @@ Downloader::~Downloader()
 
 }
 
-void Downloader::setDownloaderParent(QObject * parent)
+QWebEnginePage& Downloader::page()
 {
-    this->setParent(parent);
+    return Page;
 }
 
 Downloader& Downloader::operator=(const Downloader& Right)
