@@ -4,4 +4,6 @@
 /Downloads/
 
 # Исключённые файлы
-/CMakeLists.txt.user
+/*
+!/CMakeLists.txt
+!/README.md
