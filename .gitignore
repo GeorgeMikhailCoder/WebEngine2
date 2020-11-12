@@ -1,0 +1,7 @@
+# Исключённые папки
+/bin/
+/release/
+/Downloads/
+
+# Исключённые файлы
+/CMakeLists.txt.user
