@@ -37,14 +37,15 @@ if(ANDROID)
   )
 else()
   add_executable(WebEngine2
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    Downloader.h
-    Downloader.cpp
+    src/main.cpp
+    src/mainwindow.cpp
+    src/mainwindow.h
+    src/mainwindow.ui
+    src/Downloader.h
+    src/Downloader.cpp
   )
 endif()
+
 
 target_link_libraries(WebEngine2 PRIVATE Qt5::Widgets)
 target_link_libraries(WebEngine2 PRIVATE Qt5::WebEngineWidgets)
