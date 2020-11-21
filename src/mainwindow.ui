@@ -74,27 +74,11 @@
       <x>390</x>
       <y>270</y>
       <width>361</width>
-      <height>251</height>
+      <height>261</height>
      </rect>
     </property>
     <property name="text">
      <string>There will be source code of html</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="MsgOut">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>130</y>
-      <width>301</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>The messages output</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="linePath">
@@ -107,7 +91,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>C:\Users\60\Desktop\Загрузка из моего приложения\111.html</string>
+     <string>WebEngine2_downloads\111.html</string>
     </property>
    </widget>
    <widget class="QToolButton" name="ButSetPath">
@@ -137,6 +121,20 @@
     </property>
     <property name="textVisible">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="MsgOut">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>331</width>
+      <height>401</height>
+     </rect>
+    </property>
+    <property name="plainText">
+     <string>Messages:
+</string>
     </property>
    </widget>
   </widget>

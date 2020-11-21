@@ -18,6 +18,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::showMessage(QString msg)
 {
+    ui->MsgOut->appendPlainText(msg);
     QMessageBox::information(this,"Message",msg);
 }
 
@@ -40,8 +41,7 @@ void MainWindow::on_ButLoad_clicked()
 {
     if(QUrl(ui->lineAdress->text()).isValid())
     {
-        ui->MsgOut->setText("Loading main page...");
-
+        ui->MsgOut->appendPlainText("Loading main page...");
 
 
         parsePath(ui->linePath->text());
@@ -73,7 +73,7 @@ void MainWindow::convertHtml(bool ok)
         {
             ui->codePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            ui->MsgOut->setText("\n Find links:\n"+strUrl.join("\n"));
+            ui->MsgOut->appendPlainText("\n Find links:\n"+strUrl.join("\n"));
 
             CountHtml = strUrl.length();
             CountDownloaded=0;
