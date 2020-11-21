@@ -31,12 +31,12 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QStringList findLinks(QString strHtml);
-    void parsePath(QString StrPath);
+    void parsePath();
+    bool createPageDirectory();
     bool checkPath();
     QString addLinkedPath();
 
     QList<Downloader*> MassHtml;
-//    QVector<Downloader> MassHtml;
     QDir SavePath;
     QString SaveFileName;
     int CountDownloaded;

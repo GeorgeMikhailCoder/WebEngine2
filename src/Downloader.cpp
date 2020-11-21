@@ -52,23 +52,19 @@ void Downloader::loadAndSave(QString Url, QString fPathName)
 {
     FilePathName=fPathName;
     Page.setUrl(Url);
-    //emit createMessage("Signal sended");
 
     connect(&Profile,
             SIGNAL(downloadRequested(QWebEngineDownloadItem*)),
             this,
             SLOT(BeforeDownload(QWebEngineDownloadItem*))
             );
-
-
-    //connect(&Page,SIGNAL(loadFinished(bool)),this,SLOT(save(bool)));
+    qDebug()<<fPathName;
     Page.download(Url,fPathName);
 
 }
 
 void Downloader::BeforeDownload(QWebEngineDownloadItem* DownloadItem)
 {
-qDebug()<<DownloadItem;
 Item = DownloadItem;
 connect(DownloadItem,
         SIGNAL(stateChanged (QWebEngineDownloadItem :: DownloadState)),

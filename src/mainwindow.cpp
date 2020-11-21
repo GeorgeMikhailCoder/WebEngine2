@@ -41,11 +41,10 @@ void MainWindow::on_ButLoad_clicked()
 {
     if(QUrl(ui->lineAdress->text()).isValid())
     {
-        ui->MsgOut->appendPlainText("Loading main page...");
-
-
-        parsePath(ui->linePath->text());
+        parsePath();
         if(!checkPath())return;
+        if(!createPageDirectory())return;
+        ui->MsgOut->appendPlainText("Loading main page...");
         addLinkedPath();
         qDebug()<<SavePath;
         QDir MainPath = SavePath;
@@ -56,7 +55,7 @@ void MainWindow::on_ButLoad_clicked()
 
         MassHtml.append(new Downloader(this));
         connect(&MassHtml.last()->page(),SIGNAL(loadFinished(bool)),this,SLOT(convertHtml(bool)));
-        MassHtml.last()->loadAndSave(ui->lineAdress->text(),MainPath.path()+"/"+SaveFileName+".html");
+        MassHtml.last()->loadAndSave(ui->lineAdress->text(),MainPath.absolutePath()+"/"+SaveFileName+".html");
         ui->preview->setPage(&MassHtml.last()->page());
     }
     else createMessage("Url isn't valid");
@@ -73,18 +72,19 @@ void MainWindow::convertHtml(bool ok)
         {
             ui->codePreview->setText(strHtml);
             QStringList strUrl = findLinks(strHtml);
-            ui->MsgOut->appendPlainText("\n Find links:\n"+strUrl.join("\n"));
+            ui->MsgOut->appendPlainText("\n Find links:\n"+strUrl.join("\n")+"\n");
 
             CountHtml = strUrl.length();
             CountDownloaded=0;
             ui->progressBar->reset();
             ui->progressBar->setMaximum(100*(CountHtml));
             ui->progressBar->show();
-
+            qDebug()<<SavePath;
+            qDebug()<<SaveFileName;
             for(int  i=0;i<strUrl.length();i++)
             {
                 MassHtml.append(new Downloader(this));
-                MassHtml.last()->loadAndSave(strUrl[i],SavePath.path()+"/linked_"+QString::number(i)+".html");
+                MassHtml.last()->loadAndSave(strUrl[i],SavePath.absolutePath()+"/linked_"+QString::number(i)+".html");
             }
 
 
@@ -96,8 +96,8 @@ void MainWindow::convertHtml(bool ok)
 
 void MainWindow::on_ButSetPath_clicked()
 {
-    QString pathSave = QFileDialog::getSaveFileName(0,QObject::tr("Укажите папку для сохранения файла"),QDir::homePath(), QObject::tr("Web-страница (*.html);;Все файлы (*.*)"));
-    ui->linePath->setText(QDir(QDir::homePath()).relativeFilePath(pathSave));
+    QString pathSave = QFileDialog::getExistingDirectory(0,QObject::tr("Укажите папку для сохранения файла"),QDir::currentPath());
+    ui->linePath->setText(QDir(QDir::currentPath()).relativeFilePath(pathSave));
 }
 
 QStringList MainWindow::findLinks(QString strHtml)
@@ -119,27 +119,20 @@ QStringList MainWindow::findLinks(QString strHtml)
     return res;
 }
 
-void MainWindow::parsePath(QString StrPath)
+void MainWindow::parsePath()
 {
-    QDir Path(StrPath);
-
-    QString NameHtml = Path.dirName();
-    qDebug()<<NameHtml.indexOf(QString("."));
-    qDebug()<< NameHtml.length();
-    NameHtml.remove(NameHtml.indexOf(QString(".")),NameHtml.length()-NameHtml.indexOf(QString(".")));
-    qDebug()<<NameHtml;
-    if(!Path.cdUp())
-    {
-        StrPath.remove(QString("\\"+NameHtml+".html"));
-        Path.setPath(StrPath);
-    }
-    qDebug()<<Path.path();
-
-
-    SavePath = Path;
-    SaveFileName = NameHtml;
+    SavePath = QDir(ui->linePath->text());
+    SaveFileName = ui->lineName->text();
 }
 
+bool MainWindow::createPageDirectory()
+{
+    bool res = SavePath.mkpath(SaveFileName);
+    if(!res)
+        createMessage("Fail to create directory of the page");
+    SavePath.cd(SaveFileName);
+    return res;
+}
 
 bool MainWindow::checkPath()
 {
@@ -148,7 +141,7 @@ qDebug()<< SavePath.path();
     if(!SavePath.exists())
     {
         if(QMessageBox::question(this,"Message","Do you want to create path?"))
-            if(SavePath.mkpath(SavePath.path()))
+            if(SavePath.mkpath(SavePath.absolutePath()))
                 createMessage("Directory created");
             else
             {
