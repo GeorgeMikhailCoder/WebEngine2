@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->progressBar->hide();
-
+    this->setFixedSize(QSize(800,600));
     connect(this,SIGNAL(createMessage(QString)), this, SLOT(showMessage(QString)));
 }
 
