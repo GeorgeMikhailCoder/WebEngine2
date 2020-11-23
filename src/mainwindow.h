@@ -15,27 +15,30 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+signals:
+    void createMessage(QString);
+
+private slots:
+    void on_ButSetPath_clicked();
+    void on_ButLoad_clicked();
+    void on_loadProgress(int progress);
+
+    void showMessage(QString msg);
+    void convertHtml(bool ok);
+    void countLoadFinished(bool);
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-signals:
-    void createMessage(QString);
-private slots:
-    void on_ButLoad_clicked();
-    void convertHtml(bool ok);
-    void on_ButSetPath_clicked();
-    void showMessage(QString msg);
-    void on_loadProgress(int progress);
-    void countLoadFinished(bool);
 
 private:
-    Ui::MainWindow *ui;
     QStringList findLinks(QString strHtml);
     void parsePath();
     bool createPageDirectory();
     bool checkPath();
     QString addLinkedPath();
 
+    Ui::MainWindow *ui;
     QList<Downloader*> MassHtml;
     QDir SavePath;
     QString SaveFileName;
