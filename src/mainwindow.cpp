@@ -43,6 +43,7 @@ void MainWindow::countLoadFinished(bool ok)
     {
         ui->progressBar->setValue(ui->progressBar->maximum());
         createMessage("Load finished");
+        ui->ButLoad->setDisabled(false);
     }
 }
 
@@ -61,11 +62,17 @@ void MainWindow::on_ButLoad_clicked()
             return;
         }
 
+        if(!addLinkedPath())
+        {
+            return;
+        }
+
+        ui->ButLoad->setDisabled(true);
         ui->MsgOut->appendPlainText("Loading main page...");
-        addLinkedPath();
         QDir MainPath = SavePath;
         MainPath.cdUp();
 
+        CountDownloaded = 0;
         ui->progressBar->reset();
         ui->progressBar->show();
 
@@ -130,9 +137,13 @@ void MainWindow::on_ButSetPath_clicked()
                 QDir::currentPath()
                 );
 
-    ui->linePath->setText(
-                QDir(QDir::currentPath()).relativeFilePath(pathSave)
-                );
+    if( !pathSave.isEmpty() )
+    {
+        ui->linePath->setText(
+                    QDir(QDir::currentPath()).relativeFilePath(pathSave)
+                    );
+    }
+
 }
 
 QStringList MainWindow::findLinks(QString strHtml)
@@ -177,19 +188,9 @@ void MainWindow::parsePath()
     SaveFileName = ui->lineName->text();
 }
 
-bool MainWindow::createPageDirectory()
-{
-    bool boolResult = SavePath.mkpath(SaveFileName);
-    if(!boolResult)
-    {
-        createMessage("Fail to create directory of the page");
-    }
-    SavePath.cd(SaveFileName);
-    return boolResult;
-}
-
 bool MainWindow::checkPath()
 {
+    qDebug()<<SavePath;
     //создание несуществующего пути
     if(!SavePath.exists())
     {
@@ -215,22 +216,53 @@ bool MainWindow::checkPath()
     return true;
 }
 
-QString MainWindow::addLinkedPath()
+bool MainWindow::createPageDirectory()
 {
-    bool boolResult = true;
-    if(SavePath.exists(SaveFileName + "_linked"))
+    QString SiteDirName = SaveFileName;
+    if(SavePath.exists(SaveFileName))
     {
-        boolResult*=SavePath.rmdir(SaveFileName + "_linked");
+
+        int countRepeatedFiles = 2;
+        QString EndNumber = "(" + QString::number(2) + ")";
+        for(; SavePath.exists(SiteDirName+EndNumber); countRepeatedFiles++)
+        {
+            EndNumber = "(" + QString::number(countRepeatedFiles) + ")";
+        }
+        SiteDirName += EndNumber;
+        if(QMessageBox::question(this,
+                                 "Message",
+                                 "The directory of the filename  \"" +SaveFileName+ "\" already exists."
+                                 +" Do you want to create directory \"" +SiteDirName+ "\"?")
+                == QMessageBox::StandardButton::No)
+        {
+            createMessage("Fail to create directory of the site. Directory already exists. Please change the name of file.");
+            return false;
+        }
+
     }
 
-    boolResult *= SavePath.mkdir(SaveFileName + "_linked");
-    boolResult *= SavePath.cd(SaveFileName + "_linked");
+    if( !SavePath.mkdir(SiteDirName) )
+    {
+        createMessage("Fail to create directory of the site");
+        return false;
+    }
 
-    if(!boolResult)
+    SavePath.cd(SiteDirName);
+    return true;
+}
+
+
+bool MainWindow::addLinkedPath()
+{
+    QString LinkedDirName = SaveFileName + "_linked";
+
+    if( !SavePath.mkdir(LinkedDirName) )
     {
         createMessage("Fail to create \"linked\" directory");
+        return false;
     }
 
-    return SavePath.absolutePath();
+    SavePath.cd(LinkedDirName);
+    return true;
 
 }

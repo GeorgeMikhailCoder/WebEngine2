@@ -36,7 +36,7 @@ private:
     void parsePath();
     bool createPageDirectory();
     bool checkPath();
-    QString addLinkedPath();
+    bool addLinkedPath();
 
     Ui::MainWindow *ui;
     QList<Downloader*> MassHtml;

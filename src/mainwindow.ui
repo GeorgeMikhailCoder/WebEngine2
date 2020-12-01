@@ -121,7 +121,7 @@
      <item row="2" column="1">
       <widget class="QLineEdit" name="lineName">
        <property name="text">
-        <string>111</string>
+        <string>miet.aha.ru</string>
        </property>
       </widget>
      </item>
